@@ -1,6 +1,6 @@
-import App from './components/App.svelte'
+import Login from './components/Login.svelte'
 
-const app = new App({
+const app = new Login({
   target: document.querySelector('main'),
   data: {
     quotes: []
