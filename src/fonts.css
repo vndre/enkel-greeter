@@ -1,0 +1,7 @@
+@font-face {
+  font-family: 'Agane Regular';
+  src: url('./assets/fonts/Agane-55.woff2') format('woff2'),
+      url('./assets/fonts/Agane-55.woff') format('woff');
+  font-style: normal;
+  font-weight: 400;
+}
