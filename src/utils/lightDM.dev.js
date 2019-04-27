@@ -3,8 +3,8 @@ const debugMessage = message => console.log(`%c${message}`, `color:blue`)
 window.lightdm = {
   is_authenticated: false,
   authentication_user: undefined,
-  default_session: 'openbox',
-  can_hibernate: true,
+  default_session: 'i3wm',
+  can_hibernate: false,
   can_restart: true,
   can_shutdown: true,
   can_suspend: true,
