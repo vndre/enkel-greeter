@@ -1,17 +1,25 @@
 <script>
-  import { fly } from 'svelte/transition'
+  import { fly, fade } from 'svelte/transition'
   import { quadInOut } from 'svelte/easing'
-  
-  import { onMount } from 'svelte'
+  import { onMount, afterUpdate } from 'svelte'
   import rightArrowSVG from '../assets/icons/right-arrow.svg'
+  import loadingBarSVG from '../assets/icons/loading-bar.svg'
 
   let error
-  let userSessions = lightdm.sessions
-  let selectedSession = userSessions.find(s => s.name === lightdm.default_session)
-  let mounted = false
+  let { 
+    hostname,
+    sessions: userSessions,
+    default_session: defaultSession,
+    authenticate,
+    cancel_authentication: cancelAuthentication,
+    start_session: startSession,
+    respond
+  } = lightdm
+  let selectedSession = userSessions.find(s => s.name === defaultSession)
+  let status = ''
 
   onMount(() => {
-    mounted = true
+    status = 'waiting'
   })
 
   function focusContainer() {
@@ -35,6 +43,29 @@
       else error = 'missing password'
       return
     }
+
+    authenticate(user)
+    status = 'authenticating'
+  }
+
+  window.show_prompt = (text, type) => {
+    if (type === 'password') respond(document.querySelector('#user-secret').value)
+  }
+
+  window.authentication_complete = () => {
+      if (lightdm.is_authenticated) startSession(selectedSession.name)
+      else {
+        cancelAuthentication()
+        setTimeout(() => {
+          status = 'fuc'
+        }, 2000)
+    console.log('status', status)
+        error = 'Invalid username/password'
+      }
+  }
+
+  window.show_message = (text) => {
+    error = text
   }
 </script>
 
@@ -153,16 +184,31 @@
     background: var(--c3);
     font-size: 1em;
   }
+  .loader {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .loader img {
+    width: 75px;
+  }
+  .loader span {
+    font-size: 1.6em;
+    font-style: italic;
+    color: white;
+  }
 </style>
 
-{#if mounted}
+{#if status === 'waiting'}
   <div
     class='container'
     on:focusin={focusContainer}
     on:focusout={focusContainer}
-    transition:fly={{ y: 40, easing: quadInOut }}
+    in:fly={{ y: 40, easing: quadInOut }}
+    out:fade
   >
-    <h1>Welcome</h1>
+    <h1>{hostname || `welcome`}</h1>
     <form
       on:submit|preventDefault={handleLogin}
       autocomplete='off'
@@ -206,5 +252,14 @@
         </button>
       </div>
     </form>
+  </div>
+{/if}
+{#if status === 'authenticating'}
+  <div
+    class='loader'
+    transition:fade={{ easing: quadInOut }}
+  >
+    <img src={loadingBarSVG} alt='loading' />
+    <span>signing in</span>
   </div>
 {/if}
