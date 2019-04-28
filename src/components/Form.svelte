@@ -1,9 +1,18 @@
 <script>
+  import { fly } from 'svelte/transition'
+  import { quadInOut } from 'svelte/easing'
+  
+  import { onMount } from 'svelte'
   import rightArrowSVG from '../assets/icons/right-arrow.svg'
 
   let error
   let userSessions = lightdm.sessions
   let selectedSession = userSessions.find(s => s.name === lightdm.default_session)
+  let mounted = false
+
+  onMount(() => {
+    mounted = true
+  })
 
   function focusContainer() {
     document.querySelector('.container')
@@ -35,10 +44,11 @@
   }
   .container {
     background: var(--c3);
-    max-width: 700px;
+    width: 100%;
+    max-width: 400px;
     min-width: 300px;
     max-height: 500px;
-    margin: auto;
+    margin: 50px;
     padding: 40px;
     border-radius: 8px;
     box-shadow: var(--shadow);
@@ -145,53 +155,56 @@
   }
 </style>
 
-<div
-  class='container'
-  on:focusin={focusContainer}
-  on:focusout={focusContainer}
->
-  <h1>Welcome</h1>
-  <form
-    on:submit|preventDefault={handleLogin}
-    autocomplete='off'
+{#if mounted}
+  <div
+    class='container'
+    on:focusin={focusContainer}
+    on:focusout={focusContainer}
+    transition:fly={{ y: 40, easing: quadInOut }}
   >
-    <div class='form-group'>
-      <input
-        id='user-name'
-        type=text
-        placeholder='username'
-        on:focus={clearError}
-      />
-      <span />
-    </div>
-    <div class='form-group'>
-      <input
-        id='user-secret'
-        type=password
-        placeholder='password'
-      />
-      <span />
-    </div>
-    {#if error}
-      <div class='error-group'>
-        <p>{error}</p>
+    <h1>Welcome</h1>
+    <form
+      on:submit|preventDefault={handleLogin}
+      autocomplete='off'
+    >
+      <div class='form-group'>
+        <input
+          id='user-name'
+          type=text
+          placeholder='username'
+          on:focus={clearError}
+        />
+        <span />
       </div>
-    {/if}
-    <div class='bottom'>
-      <div class='session'>
-        <span>session:</span>
-        <select
-          class='session-list'
-          bind:value={selectedSession}
-        >
-          {#each userSessions as session}
-            <option value={session}>{session.name}</option>
-          {/each}
-        </select>
+      <div class='form-group'>
+        <input
+          id='user-secret'
+          type=password
+          placeholder='password'
+        />
+        <span />
       </div>
-      <button id='login-btn'>
-        <img src={rightArrowSVG} alt='login' />
-      </button>
-    </div>
-  </form>
-</div>
+      {#if error}
+        <div class='error-group'>
+          <p>{error}</p>
+        </div>
+      {/if}
+      <div class='bottom'>
+        <div class='session'>
+          <span>session:</span>
+          <select
+            class='session-list'
+            bind:value={selectedSession}
+          >
+            {#each userSessions as session}
+              <option value={session}>{session.name}</option>
+            {/each}
+          </select>
+        </div>
+        <button id='login-btn'>
+          <img src={rightArrowSVG} alt='login' />
+        </button>
+      </div>
+    </form>
+  </div>
+{/if}
