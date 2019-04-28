@@ -54,6 +54,9 @@ window.show_message = (text, type) => {
     --shadow-h: 0 19px 38px rgba(4, 3, 15, 0.30),
       0 15px 12px rgba(4, 3, 15, 0.22);
   }
+  :global(*) {
+    box-sizing: border-box;
+  }
   :global(html, body) {
     margin: 0;
     padding: 0;
@@ -64,7 +67,9 @@ window.show_message = (text, type) => {
   :global(main) {
     height: 100%;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
   }
   :global(.container__active) {
     box-shadow: var(--shadow-h) !important;
