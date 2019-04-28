@@ -1,4 +1,4 @@
-const debugMessage = message => console.log(`%c${message}`, `color:blue`)
+const debugMessage = message => console.log(`%c${message}`, 'background: #222; color: #bada55')
 
 window.lightdm = {
   is_authenticated: false,
@@ -8,6 +8,7 @@ window.lightdm = {
   can_restart: true,
   can_shutdown: true,
   can_suspend: true,
+  hostname: 'Arch',
   sessions: [
     {
         name: 'KDE 5',
@@ -52,18 +53,21 @@ window.lightdm = {
   ],
   language: 'American English',
   authenticate: (username) => {
-    debugMessage(`%clightdm.authenticate('${username}')`)
+    debugMessage(`lightdm.authenticate('${username}')`)
     lightdm.authentication_user = username
   },
   cancel_authentication: () => {
-    debugMessage('%clightdm.cancel_authentication()')
+    debugMessage('lightdm.cancel_authentication()')
   },
   respond: (value) => {
-    debugMessage(`%clightdm.respond('${value}')`)
-    if (password === 'testing') {
+    debugMessage(`lightdm.respond('${value}')`)
+    if (value === 'testing') {
       lightdm.is_authenticated = true
     }
     authentication_complete()
+  },
+  start_session: (session) => {
+    debugMessage(`lightdm.start_session('${session}')`)
   },
   login: (user, session) => debugMessage(`Logged in with: user = ${user}, session = ${session}`),
   shutdown: () => debugMessage('lightdm.shutdown()'),
