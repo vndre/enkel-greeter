@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: './src/index.js',
@@ -10,8 +11,15 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       inject: true,
-      template: './src/index.html'
-    })
+      template: path.resolve(__dirname, 'src/index.html')
+    }),
+    new CopyPlugin([
+      {
+        from: path.resolve(__dirname, 'src/index.theme'),
+        to: path.resolve(__dirname, 'dist'),
+        toType: 'file'
+      }
+    ])
   ],
   module: {
     rules: [
