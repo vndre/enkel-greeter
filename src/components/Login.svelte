@@ -1,6 +1,13 @@
 <script>
+  import { setContext, getContext } from 'svelte'
   import Form from './Form.svelte'
   import PowerOptions from './PowerOptions.svelte'
+  import Loading from './Loading.svelte'
+
+  let status = ''
+  function update(value) {
+    status = value
+  }
 </script>
 
 <style>
@@ -20,9 +27,9 @@
   :global(html, body) {
     margin: 0;
     padding: 0;
-    background: #363946;
     font-family: 'Agane Regular', Arial, Helvetica, sans-serif;
     font-size: 14px;
+    overflow: hidden;
   }
   :global(main) {
     height: 100%;
@@ -30,13 +37,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    background-image: url('../assets/background.jpg');
+    background-size: cover;
   }
   :global(.container__active) {
     box-shadow: var(--shadow-h) !important;
   }
-
 </style>
 
-<Form />
-<PowerOptions/>
+<Form {status} {update} />
+<Loading {status} {update} />
+<PowerOptions {status} {update} />
