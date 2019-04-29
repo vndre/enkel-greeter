@@ -1,6 +1,9 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+const Cssnano = require('cssnano')
+const Autoprefixer = require('autoprefixer')
 
 module.exports = {
   entry: './src/index.js',
@@ -9,6 +12,7 @@ module.exports = {
     filename: 'main.js',
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       inject: true,
       template: path.resolve(__dirname, 'src/index.html')
@@ -64,7 +68,17 @@ module.exports = {
               singleton: true
             }
           },
-          'css-loader'
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              plugins: [
+                Autoprefixer,
+                Cssnano
+              ]
+            }
+          }
         ]
       },
       {
