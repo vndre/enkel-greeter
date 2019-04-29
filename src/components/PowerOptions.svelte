@@ -25,6 +25,7 @@
   function executeAction(option) {
     update(option)
     inProcess = true
+    lightdm[option]()
   }
 </script>
 
