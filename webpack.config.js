@@ -17,7 +17,7 @@ module.exports = {
       {
         from: path.resolve(__dirname, 'src/index.theme'),
         to: path.resolve(__dirname, 'dist'),
-        toType: 'file'
+        toType: 'dir'
       }
     ])
   ],
@@ -45,7 +45,7 @@ module.exports = {
         }
       },
       {
-        test: /\.woff(2)?$/,
+        test: /\.(woff(2)?|jpg)?$/,
         use: {
           loader: 'file-loader',
           options: {
@@ -71,7 +71,10 @@ module.exports = {
         test: /\.(svelte)$/,
         exclude: /node_modules/,
         use: {
-          loader: 'svelte-loader'
+          loader: 'svelte-loader',
+          options: {
+            emitCss: true
+          }
         }
       }
     ]
