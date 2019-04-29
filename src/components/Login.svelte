@@ -1,10 +1,25 @@
 <script>
-  import { setContext, getContext } from 'svelte'
+  import { onMount } from 'svelte'
   import Form from './Form.svelte'
   import PowerOptions from './PowerOptions.svelte'
   import Loading from './Loading.svelte'
+  require('../assets/background.jpg')
 
   let status = ''
+
+  onMount(() => {
+    fetch('../assets/background.jpg').then((response) => {
+      if(response.ok) return response.blob()
+      throw new Error('Couldn\'t fetch background')
+    }).then(() => {
+        const backDiv = document.querySelector('.background')
+        backDiv.classList.add('imageReady')
+    })
+    .catch(function(error) {
+      console.error(`Error on fetch(): ${error.message}`);
+    })
+  })
+
   function update(value) {
     status = value
   }
@@ -37,14 +52,28 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-image: url('../assets/background.jpg');
-    background-size: cover;
+    position: relative;
   }
   :global(.container__active) {
     box-shadow: var(--shadow-h) !important;
   }
+  :global(.imageReady) {
+    opacity: 1 !important;
+  }
+  .background {
+    position: absolute;
+    background-image: url('../assets/background.jpg');
+    opacity: 0;
+    background-size: cover;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    transition: all 300ms ease-in;
+  }
 </style>
 
+<div class='background' />
 <Form {status} {update} />
 <Loading {status} {update} />
 <PowerOptions {status} {update} />
