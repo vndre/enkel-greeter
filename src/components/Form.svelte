@@ -4,8 +4,8 @@
   import { quadInOut } from 'svelte/easing'
   import rightArrowSVG from '../assets/icons/right-arrow.svg'
 
-  export let status
-  export let update
+  export let isIdle
+  export let toggleIdle
   let error
   let { 
     hostname,
@@ -19,7 +19,7 @@
   let selectedSession = userSessions.find(s => s.name === defaultSession)
 
   onMount(() => {
-    update('idle')
+    toggleIdle()
   })
 
   function focusContainer() {
@@ -43,21 +43,21 @@
       else error = 'missing password'
       return
     }
-    update('auth')
-    authenticate(user)
+    lightdm.authenticate(user)
   }
 
   window.show_prompt = (text, type) => {
-    if (type === 'password') respond(document.querySelector('#user-secret').value)
+    const { value: secret } = document.querySelector('#user-secret')
+    if (type === 'password') {
+      lightdm.respond(secret)
+    }
   }
 
   window.authentication_complete = () => {
-      if (lightdm.is_authenticated) startSession(selectedSession.name)
+      if (lightdm.is_authenticated) {
+        lightdm.login(lightdm.authentication_user, selectedSession.name)
+      }
       else {
-        cancelAuthentication()
-        setTimeout(() => {
-          status = 'fuc'
-        }, 2000)
         error = 'Invalid username/password'
       }
   }
@@ -129,16 +129,7 @@
     text-align: center;
     color: #74F8F8;
     font-style: italic;
-    animation: heightIn 300ms ease-in-out;
-    margin-top: 10px;
-  }
-  @keyframes heightIn {
-    from {
-      height: 0px;
-    }
-    to {
-      height: 13px;
-    }
+    margin: 10px 0;
   }
   .error-group p {
     margin: 0;
@@ -194,7 +185,7 @@
   }
 </style>
 
-{#if status === 'idle'}
+{#if isIdle}
   <div
     class='container'
     on:focusin={focusContainer}

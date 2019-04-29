@@ -1,12 +1,10 @@
 <script>
-  import { onMount, afterUpdate } from 'svelte'
   import { fly, fade } from 'svelte/transition'
   import { quadInOut } from 'svelte/easing'
   import Clock from './Clock.svelte'
 
-  export let status
-  export let update
-  let inProcess = true
+  export let isIdle
+
   let userOptions = {
     hibernate: lightdm.can_hibernate,
     restart: lightdm.can_restart,
@@ -14,17 +12,7 @@
     suspend: lightdm.can_suspend
   }
 
-  onMount(() => {
-    inProcess = false
-  })
-
-  afterUpdate(() => {
-    if (status === 'auth') inProcess = true
-  })
-
   function executeAction(option) {
-    update(option)
-    inProcess = true
     lightdm[option]()
   }
 </script>
@@ -54,7 +42,7 @@
   }
 </style>
 
-{#if !inProcess}
+{#if isIdle}
   <div
     in:fly={{ delay: 200, y: 20, easing: quadInOut }}
     out:fade

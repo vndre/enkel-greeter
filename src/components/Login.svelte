@@ -2,25 +2,23 @@
   import { onMount } from 'svelte'
   import Form from './Form.svelte'
   import PowerOptions from './PowerOptions.svelte'
-  import Loading from './Loading.svelte'
+  import '../assets/background.jpg'
 
-  let status = ''
+  let isIdle = false
 
   onMount(() => {
-    fetch('../assets/background.jpg').then((response) => {
-      if(response.ok) return response.blob()
-      throw new Error('Couldn\'t fetch background')
-    }).then(() => {
-        const backDiv = document.querySelector('.background')
-        backDiv.classList.add('imageReady')
-    })
-    .catch(function(error) {
-      console.error(`Error on fetch(): ${error.message}`)
-    })
+    const imgpath = './assets/background.jpg'
+    const img = new Image()
+    img.onload = () => {
+      const bg = document.querySelector('.background')
+      bg.src = img.src
+      bg.classList.add('imageReady')
+    }
+    img.src = imgpath
   })
 
-  function update(value) {
-    status = value
+  function toggleIdle() {
+    isIdle = !isIdle
   }
 </script>
 
@@ -61,18 +59,13 @@
   }
   .background {
     position: absolute;
-    background-image: url('../assets/background.jpg');
+    width: 100%;
+    height: 100%;
     opacity: 0;
-    background-size: cover;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    transition: all 300ms ease-in;
+    transition: opacity 300ms ease-in;
   }
 </style>
 
-<div class='background' />
-<Form {status} {update} />
-<Loading {status} {update} />
-<PowerOptions {status} {update} />
+<img class='background' alt='background' />
+<Form {isIdle} {toggleIdle} />
+<PowerOptions {isIdle} />
