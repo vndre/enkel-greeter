@@ -14,7 +14,7 @@
     }, 3000)
   })
 
-  onDestroy(() => clearInterval(this.interval))
+  onDestroy(() => clearInterval(interval))
 </script>
 
 <style>
