@@ -3,7 +3,6 @@
   import Form from './Form.svelte'
   import PowerOptions from './PowerOptions.svelte'
   import Loading from './Loading.svelte'
-  require('../assets/background.jpg')
 
   let status = ''
 
@@ -16,7 +15,7 @@
         backDiv.classList.add('imageReady')
     })
     .catch(function(error) {
-      console.error(`Error on fetch(): ${error.message}`);
+      console.error(`Error on fetch(): ${error.message}`)
     })
   })
 
