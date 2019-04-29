@@ -1,10 +1,11 @@
 <script>
+  import { onMount } from 'svelte'
   import { fly, fade } from 'svelte/transition'
   import { quadInOut } from 'svelte/easing'
-  import { onMount, afterUpdate } from 'svelte'
   import rightArrowSVG from '../assets/icons/right-arrow.svg'
-  import loadingBarSVG from '../assets/icons/loading-bar.svg'
 
+  export let status
+  export let update
   let error
   let { 
     hostname,
@@ -16,10 +17,9 @@
     respond
   } = lightdm
   let selectedSession = userSessions.find(s => s.name === defaultSession)
-  let status = ''
 
   onMount(() => {
-    status = 'waiting'
+    update('idle')
   })
 
   function focusContainer() {
@@ -43,9 +43,8 @@
       else error = 'missing password'
       return
     }
-
+    update('auth')
     authenticate(user)
-    status = 'authenticating'
   }
 
   window.show_prompt = (text, type) => {
@@ -59,7 +58,6 @@
         setTimeout(() => {
           status = 'fuc'
         }, 2000)
-    console.log('status', status)
         error = 'Invalid username/password'
       }
   }
@@ -130,6 +128,19 @@
     text-align: center;
     color: #74F8F8;
     font-style: italic;
+    animation: heightIn 300ms ease-in-out;
+    margin-top: 10px;
+  }
+  @keyframes heightIn {
+    from {
+      height: 0px;
+    }
+    to {
+      height: 13px;
+    }
+  }
+  .error-group p {
+    margin: 0;
   }
   button {
     border-radius: 50%;
@@ -142,10 +153,8 @@
       0 6px 6px rgba(175, 102, 254, 0.23);
     cursor: pointer;
     padding: 10px;
-    align-self: flex-end;
+    margin-left: auto;
     color: white;
-    font-size: 2em;
-    margin-top: 20px;
     transition: all 300ms cubic-bezier(0.39, 0.575, 0.565, 1);
   }
   button:hover, button:focus {
@@ -154,9 +163,7 @@
   }
   .bottom {
     display: flex;
-  }
-  .bottom > button {
-    margin-left: auto;
+    margin-top: 20px;
   }
   .session {
     display: flex;
@@ -174,7 +181,7 @@
     border: none;
     -webkit-appearance: none;
     background-color: transparent;
-    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjNTE1MDY1IiBkPSJNOC43MSAxMS43MWwyLjU5IDIuNTljLjM5LjM5IDEuMDIuMzkgMS40MSAwbDIuNTktMi41OWMuNjMtLjYzLjE4LTEuNzEtLjcxLTEuNzFIOS40MWMtLjg5IDAtMS4zMyAxLjA4LS43IDEuNzF6Ii8+PC9zdmc+);
+    background-image: url('../assets/icons/dropdown-arrow.svg');
     background-repeat: no-repeat, repeat;
     background-position: left;
     background-size: contain;
@@ -184,23 +191,9 @@
     background: var(--c3);
     font-size: 1em;
   }
-  .loader {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .loader img {
-    width: 75px;
-  }
-  .loader span {
-    font-size: 1.6em;
-    font-style: italic;
-    color: white;
-  }
 </style>
 
-{#if status === 'waiting'}
+{#if status === 'idle'}
   <div
     class='container'
     on:focusin={focusContainer}
@@ -227,11 +220,15 @@
           id='user-secret'
           type=password
           placeholder='password'
+          on:focus={clearError}
         />
         <span />
       </div>
       {#if error}
-        <div class='error-group'>
+        <div
+          class='error-group'
+          out:fade
+        >
           <p>{error}</p>
         </div>
       {/if}
@@ -252,14 +249,5 @@
         </button>
       </div>
     </form>
-  </div>
-{/if}
-{#if status === 'authenticating'}
-  <div
-    class='loader'
-    transition:fade={{ easing: quadInOut }}
-  >
-    <img src={loadingBarSVG} alt='loading' />
-    <span>signing in</span>
   </div>
 {/if}
