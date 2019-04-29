@@ -38,6 +38,7 @@
     right: 0;
     padding: 20px 20px 0 0;
     user-select: none;
+    z-index: 100;
   }
   .action {
     cursor: pointer;
