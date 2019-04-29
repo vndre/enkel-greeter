@@ -1,24 +1,42 @@
 <script>
-  import { onMount } from 'svelte'
+  import { onMount, afterUpdate } from 'svelte'
+  import { fly, fade } from 'svelte/transition'
+  import { quadInOut } from 'svelte/easing'
   import Clock from './Clock.svelte'
 
+  export let status
+  export let update
+  let inProcess = true
   let userOptions = {
     hibernate: lightdm.can_hibernate,
     restart: lightdm.can_restart,
     shutdown: lightdm.can_shutdown,
     suspend: lightdm.can_suspend
   }
+
+  onMount(() => {
+    inProcess = false
+  })
+
+  afterUpdate(() => {
+    if (status === 'auth') inProcess = true
+  })
+
+  function executeAction(option) {
+    update(option)
+    inProcess = true
+  }
 </script>
 
 <style>
   div {
     display: flex;
-    color: white;
+    color: var(--c3);
     font-family: monospace;
     position: absolute;
-    bottom: 0;
+    top: 0;
     right: 0;
-    padding: 0 20px 20px 0;
+    padding: 20px 20px 0 0;
     user-select: none;
   }
   .action {
@@ -34,12 +52,22 @@
   }
 </style>
 
-<div>
-  {#each Object.keys(userOptions) as option, index}
-    {#if userOptions[option]}
-      <span class='action'>{Object.keys(userOptions)[index]}</span>
-      <span class='divider'>—</span>
-    {/if}
-  {/each}
-  <Clock />
-</div>
+{#if !inProcess}
+  <div
+    in:fly={{ delay: 200, y: 20, easing: quadInOut }}
+    out:fade
+  >
+    {#each Object.keys(userOptions) as option, index}
+      {#if userOptions[option]}
+        <span
+          class='action'
+          on:click={() => executeAction(Object.keys(userOptions)[index])}
+        >
+          {Object.keys(userOptions)[index]}
+        </span>
+        <span class='divider'>—</span>
+      {/if}
+    {/each}
+    <Clock />
+  </div>
+{/if}
