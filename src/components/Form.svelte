@@ -7,19 +7,17 @@
   export let isIdle
   export let toggleIdle
   let error
-  let { 
-    hostname,
-    sessions: userSessions,
-    default_session: defaultSession,
-    authenticate,
-    cancel_authentication: cancelAuthentication,
-    start_session: startSession,
-    respond
-  } = lightdm
-  let selectedSession = userSessions.find(s => s.name === defaultSession)
+  let selectedSession
+
+  const lightdm = window.lightdm || {}
 
   onMount(() => {
     toggleIdle()
+    if (lightdm.default_session !== 'default') {
+      lightdm.sessions.find(s => s.name === lightdm.default_session)
+    } else {
+      selectedSession = lightdm.sessions[0]
+    }
   })
 
   function focusContainer() {
@@ -44,6 +42,7 @@
       return
     }
     lightdm.authenticate(user)
+    toggleIdle()
   }
 
   window.show_prompt = (text, type) => {
@@ -55,9 +54,10 @@
 
   window.authentication_complete = () => {
       if (lightdm.is_authenticated) {
-        lightdm.login(lightdm.authentication_user, selectedSession.name)
+        lightdm.login(lightdm.authentication_user, selectedSession.name.toLowerCase())
       }
       else {
+        isIdle = true
         error = 'Invalid username/password'
       }
   }
@@ -193,7 +193,7 @@
     in:fly={{ y: 40, easing: quadInOut }}
     out:fade
   >
-    <h1>{hostname || `welcome`}</h1>
+    <h1>{lightdm.hostname || `welcome`}</h1>
     <form
       on:submit|preventDefault={handleLogin}
       autocomplete='off'
@@ -231,7 +231,7 @@
             class='session-list'
             bind:value={selectedSession}
           >
-            {#each userSessions as session}
+            {#each lightdm.sessions as session}
               <option value={session}>{session.name}</option>
             {/each}
           </select>

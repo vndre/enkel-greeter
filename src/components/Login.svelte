@@ -1,10 +1,11 @@
 <script>
   import { onMount } from 'svelte'
   import Form from './Form.svelte'
+  import Loading from './Loading.svelte'
   import PowerOptions from './PowerOptions.svelte'
   import '../assets/background.jpg'
 
-  let isIdle = false
+  let isIdle = null
 
   onMount(() => {
     const imgpath = './assets/background.jpg'
@@ -68,4 +69,5 @@
 
 <img class='background' alt='background' />
 <Form {isIdle} {toggleIdle} />
+<Loading {isIdle} />
 <PowerOptions {isIdle} />

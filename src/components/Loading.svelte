@@ -4,30 +4,10 @@
   import { quadInOut } from 'svelte/easing'
   import loadingBarSVG from '../assets/icons/loading-bar.svg'
 
-  export let status
-  export let update
-  let message = ''
+  export let isIdle
+  let message = 'signing in'
 
-  beforeUpdate(() => {
-    switch (status) {
-      case 'hibernate':
-        message = 'hibernating'
-        break
-      case 'restart':
-        message = 'restarting'
-        break
-      case 'shutdown':
-        message = 'shutting down'
-        break
-      case 'suspend':
-        message = 'suspending'
-        break
-      default:
-        message = 'signing in'
-        break
-    }
-  })
-
+  $: console.log('isIdle', isIdle)
 </script>
 
 <style>
@@ -48,7 +28,7 @@
   }
 </style>
 
-{#if status && status !== 'idle'}
+{#if isIdle === false}
   <div
     class='loader'
     transition:fade={{ easing: quadInOut }}
