@@ -55,6 +55,7 @@ window.lightdm = {
   authenticate: (username) => {
     debugMessage(`lightdm.authenticate('${username}')`)
     lightdm.authentication_user = username
+    show_prompt('Password: ', 'password')
   },
   cancel_authentication: () => {
     debugMessage('lightdm.cancel_authentication()')
