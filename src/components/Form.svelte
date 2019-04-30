@@ -28,23 +28,14 @@
   }
 
   function clearError() {
-    error = error && undefined
-  }
-
-  function animateMessage(node) {
-    const maxHeight = 35
-    return {
-      duration: 300,
-      easing: quadInOut,
-      css: t => `height: ${t * maxHeight}`
-    }
+    error = undefined
   }
 
   function handleLogin() {
     document.querySelector('#login-btn').blur()
     const { value: user } = document.querySelector('#user-name')
     const { value: secret } = document.querySelector('#user-secret')
-
+    
     if (!user || !secret) {
       if (!user && !secret) error = 'missing username and password'
       else if (!user) error = 'missing username'
@@ -142,8 +133,7 @@
     font-style: italic;
     position: relative;
     overflow: hidden;
-    height: 35px;
-    animation: all 300ms ease-in-out;
+    transition: all 300ms ease-in-out;
   }
   .error-group p {
     margin: 10px 0;
@@ -191,7 +181,7 @@
     -webkit-appearance: none;
     background-color: transparent;
     background-image: url('../assets/icons/dropdown-arrow.svg');
-    background-repeat: no-repeat, repeat;
+    background-repeat: no-repeat;
     background-position: left;
     background-size: contain;
     cursor: pointer;
@@ -233,15 +223,12 @@
         />
         <span />
       </div>
-      {#if error}
-        <div
-          id='error-message'
-          class='error-group'
-          transition:animateMessage
-        >
-          <p>{error}</p>
-        </div>
-      {/if}
+      <div
+        id='error-message'
+        class="error-group {error ? 'show-error' : 'hide-error'}"
+      >
+        <p>{error || ''}</p>
+      </div>
       <div class='bottom'>
         <div class='session'>
           <span>session:</span>

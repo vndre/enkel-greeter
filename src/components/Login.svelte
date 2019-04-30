@@ -70,6 +70,12 @@
     background: black !important;
     opacity: 0;
   }
+  :global(.show-error) {
+    height: 35px;
+  }
+  :global(.hide-error) {
+    height: 0px;
+  }
   .background {
     position: absolute;
     width: 100%;
