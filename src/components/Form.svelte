@@ -57,7 +57,7 @@
         lightdm.login(lightdm.authentication_user, selectedSession.name.toLowerCase())
       }
       else {
-        isIdle = true
+        toggleIdle()
         error = 'Invalid username/password'
       }
   }
