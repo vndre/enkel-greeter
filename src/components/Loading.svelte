@@ -6,8 +6,6 @@
 
   export let isIdle
   let message = 'signing in'
-
-  $: console.log('isIdle', isIdle)
 </script>
 
 <style>
