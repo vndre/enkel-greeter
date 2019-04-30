@@ -11,8 +11,8 @@ A theme for lightdm-webkit2-greeter
 ## Installation
 
 ```
-1. download latest release
-2. copy `enkel` folder to /usr/share/lightdm-webkit/themes/
+1. download latest release in project's `download` folder
+2. copy uncompressed `enkel` folder to /usr/share/lightdm-webkit/themes/
 3. update `webkit_theme` option in /etc/lightdm/lightdm-webkit2-greeter to `enkel`
 ```
 
