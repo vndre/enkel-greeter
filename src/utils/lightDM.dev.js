@@ -65,7 +65,7 @@ window.lightdm = {
     if (value === 'testing') {
       lightdm.is_authenticated = true
     }
-    authentication_complete()
+    setTimeout(() => authentication_complete(), 2000)
   },
   start_session: (session) => {
     debugMessage(`lightdm.start_session('${session}')`)
