@@ -21,6 +21,10 @@
   function toggleIdle() {
     isIdle = !isIdle
   }
+
+  function logIn() {
+    document.querySelector('body').classList.add('logged-in')
+  }
 </script>
 
 <style>
@@ -43,6 +47,7 @@
     font-family: 'Agane Regular', Arial, Helvetica, sans-serif;
     font-size: 14px;
     overflow: hidden;
+    transition: opacity 300ms ease-out;
   }
   :global(main) {
     height: 100%;
@@ -58,6 +63,13 @@
   :global(.imageReady) {
     opacity: 1 !important;
   }
+  :global(.error-show) {
+    height: 35px;
+  }
+  :global(.logged-in) {
+    background: black !important;
+    opacity: 0;
+  }
   .background {
     position: absolute;
     width: 100%;
@@ -68,6 +80,6 @@
 </style>
 
 <img class='background' alt='background' />
-<Form {isIdle} {toggleIdle} />
+<Form {isIdle} {toggleIdle} {logIn} />
 <Loading {isIdle} />
 <PowerOptions {isIdle} />
