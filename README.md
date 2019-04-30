@@ -1,6 +1,6 @@
 ```
 
-                                    e n k e l
+                                                                    e n k e l
 
 
 A theme for lightdm-webkit2-greeter
@@ -16,11 +16,11 @@ A theme for lightdm-webkit2-greeter
 3. update `webkit_theme` option in /etc/lightdm/lightdm-webkit2-greeter to `enkel`
 ```
 
-### Change background image
+## Change background image
 
 location: `enkel/assets/background.jpg`
 
-### development
+## Development
 
 Recommended to use `yarn` over `npm`
 
@@ -28,7 +28,7 @@ Recommended to use `yarn` over `npm`
 - `yarn dev` runs webpack-dev-server
 - `yarn build` creates bundle and assets over `/dist`
 
-### License
+## License
 
 This software is distributed under MIT license:
 
@@ -55,3 +55,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## Credits
+- Background photo by [Bora Burri](https://unsplash.com/@borapic)
