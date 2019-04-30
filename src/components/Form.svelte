@@ -6,6 +6,7 @@
 
   export let isIdle
   export let toggleIdle
+  export let logIn
   let error
   let selectedSession
 
@@ -26,8 +27,17 @@
       .toggle('container__active')
   }
 
-  function clearError() { 
+  function clearError() {
     error = error && undefined
+  }
+
+  function animateMessage(node) {
+    const maxHeight = 35
+    return {
+      duration: 300,
+      easing: quadInOut,
+      css: t => `height: ${t * maxHeight}`
+    }
   }
 
   function handleLogin() {
@@ -55,6 +65,7 @@
   window.authentication_complete = () => {
       if (lightdm.is_authenticated) {
         lightdm.login(lightdm.authentication_user, selectedSession.name.toLowerCase())
+        logIn()
       }
       else {
         toggleIdle()
@@ -129,10 +140,16 @@
     text-align: center;
     color: #74F8F8;
     font-style: italic;
-    margin: 10px 0;
+    position: relative;
+    overflow: hidden;
+    height: 35px;
+    animation: all 300ms ease-in-out;
   }
   .error-group p {
-    margin: 0;
+    margin: 10px 0;
+    position: absolute;
+    left: 0;
+    right: 0;
   }
   button {
     border-radius: 50%;
@@ -218,8 +235,9 @@
       </div>
       {#if error}
         <div
+          id='error-message'
           class='error-group'
-          out:fade
+          transition:animateMessage
         >
           <p>{error}</p>
         </div>
